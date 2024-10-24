@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Intensity {
+  id                        Int       @id @default(autoincrement())
+  labelId                   Int      
+  label                     Label @relation(fields: [labelId], references: [id])
+  headerVersion             String?   
+  systemTemp                Float?
+  detectorTemp              Float?
+  humidity                  Float?
+  lampPD                    Float?
+  shiftVectorCoefficients       Float[]   @default([])
+  pixelWavelengthCoefficients   Float[]   @default([])
+  serialNumber              Float?
+  scanConfigName            String?
+  scanConfigType            String?
+  startWavelength           Float? 
+  endWavelength             Float?
+  patternPixelWidth         Float?
+  exposure                  Float?
+  digitalResolution         Float?
+  numRepeats                Float?
+  pgaGain                   Float?
+  totalMeasurementTimeSec   Float?
+  wavelength                Float[]   @default([])
+  absorbance                Float[]   @default([])
+  referenceSignal           Float[]   @default([])
+  sampleSignal              Float[]   @default([])
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+}
+
+model Article {
+  id          Int      @id @default(autoincrement())
+  title       String   @unique
+  description String?
+  body        String
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Label {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  Intensity   Intensity[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PklModel {
+  id          Int      @id @default(autoincrement())
+  filename    String
+  file        Bytes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
