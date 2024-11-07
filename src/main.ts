@@ -7,7 +7,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Pomona Api')
-    .setDescription('The Document for Ponoma Apis')
+    .setDescription('The Document for Pomona Apis')
     .setVersion('0.1')
     .build();
 

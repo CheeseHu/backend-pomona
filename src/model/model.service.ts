@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -25,16 +25,27 @@ export class PklModelService {
     });
   }
 
-  async getPklModel(id: number): Promise<void> {
+  async getPklModel(id: number): Promise<{ data: any }> {
     const file = await this.prisma.pklModel.findFirst({ where: { id } });
     const buffer = file.file; // Your buffer data here
+    return { data: buffer };
+  }
 
-    // Define the file path for the output .pkl file
-    const filePath = path.join(process.cwd(), 'src/model/output_model.pkl');
+  async getPklLatesModel(): Promise<{ data: any }> {
+    const latestModel = await this.prisma.pklModel.findFirst({
+      orderBy: { createdAt: 'desc' },
+    });
 
-    // Write the buffer to a .pkl file
-    fs.writeFileSync(filePath, buffer);
+    if (latestModel) {
+      const buffer = latestModel.file; // Your buffer data here
+      return { data: buffer };
+    } else {
+      throw new NotFoundException(`Model was not found`);
+    }
+  }
 
-    console.log('File has been saved');
+  async countModel(): Promise<{ count: number }> {
+    const count = await this.prisma.pklModel.count();
+    return { count };
   }
 }

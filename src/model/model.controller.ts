@@ -7,14 +7,26 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class PklModelController {
   constructor(private readonly pklModelService: PklModelService) {}
 
-  @Post('store-from-server')
+  @Post('update')
   async storeFileFromServer(): Promise<void> {
     await this.pklModelService.storePklFileFromServer();
   }
 
+  @Get('count')
+  @ApiOperation({ summary: 'Count number of models' })
+  count() {
+    return this.pklModelService.countModel();
+  }
+
+  @Get('latest')
+  @ApiOperation({ summary: 'Get the latest model' })
+  findLatest(): Promise<{ data: any }> {
+    return this.pklModelService.getPklLatesModel();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a model by id' })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<{ data: any }> {
     return this.pklModelService.getPklModel(+id);
   }
 }
