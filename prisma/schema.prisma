@@ -8,7 +8,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Intensity {
@@ -29,16 +29,6 @@ model Intensity {
   sampleSignal              Float[]   @default([])
   createdAt                 DateTime  @default(now())
   updatedAt                 DateTime  @updatedAt
-}
-
-model Article {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
-  description String?
-  body        String
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model Label {
