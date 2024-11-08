@@ -15,24 +15,14 @@ model Intensity {
   id                        Int       @id @default(autoincrement())
   labelId                   Int      
   label                     Label @relation(fields: [labelId], references: [id])
-  headerVersion             String?   
   systemTemp                Float?
   detectorTemp              Float?
   humidity                  Float?
   lampPD                    Float?
-  shiftVectorCoefficients       Float[]   @default([])
-  pixelWavelengthCoefficients   Float[]   @default([])
-  serialNumber              Float?
-  scanConfigName            String?
-  scanConfigType            String?
+  startAbsorbance           Float? 
+  endAbsorbance             Float?
   startWavelength           Float? 
   endWavelength             Float?
-  patternPixelWidth         Float?
-  exposure                  Float?
-  digitalResolution         Float?
-  numRepeats                Float?
-  pgaGain                   Float?
-  totalMeasurementTimeSec   Float?
   wavelength                Float[]   @default([])
   absorbance                Float[]   @default([])
   referenceSignal           Float[]   @default([])
@@ -65,4 +55,11 @@ model PklModel {
   file        Bytes
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Report { 
+  id Int @id @default(autoincrement()) 
+  filename String 
+  filePath String 
+  createdAt DateTime @default(now()) 
 }

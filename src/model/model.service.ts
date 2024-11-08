@@ -13,7 +13,7 @@ export class PklModelService {
     // Read the .pkl file from the server
     const fileBuffer = fs.readFileSync(filePath);
 
-    // Assuming your model table has a bytea column
+    // Assuming model table has a bytea column
     const filename = path.basename(filePath);
     console.log(fileBuffer);
 
@@ -27,7 +27,7 @@ export class PklModelService {
 
   async getPklModel(id: number): Promise<{ data: any }> {
     const file = await this.prisma.pklModel.findFirst({ where: { id } });
-    const buffer = file.file; // Your buffer data here
+    const buffer = file.file;
     return { data: buffer };
   }
 
@@ -37,7 +37,7 @@ export class PklModelService {
     });
 
     if (latestModel) {
-      const buffer = latestModel.file; // Your buffer data here
+      const buffer = latestModel.file;
       return { data: buffer };
     } else {
       throw new NotFoundException(`Model was not found`);

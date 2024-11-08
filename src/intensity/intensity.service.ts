@@ -9,7 +9,21 @@ export class IntensitiesService {
   constructor(private prisma: PrismaService) {}
 
   async create(createIntensityDto: CreateIntensityDto) {
-    return this.prisma.intensity.create({ data: createIntensityDto });
+    return this.prisma.intensity.create({
+      data: {
+        ...createIntensityDto,
+        startAbsorbance: createIntensityDto?.absorbance?.[0],
+        startWavelength: createIntensityDto?.wavelength?.[0],
+        endAbsorbance:
+          createIntensityDto?.absorbance?.[
+            createIntensityDto?.absorbance?.length - 1
+          ],
+        endWavelength:
+          createIntensityDto?.wavelength?.[
+            createIntensityDto?.wavelength?.length - 1
+          ],
+      },
+    });
   }
 
   async findAll() {
