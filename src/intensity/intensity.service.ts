@@ -3,12 +3,22 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateIntensityDto } from './dto/create-intensity.dto';
 import { UpdateIntensityDto } from './dto/update-intensity.dto';
 import { Prisma } from '@prisma/client';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class IntensitiesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly emailService: EmailService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async create(createIntensityDto: CreateIntensityDto) {
+    if (createIntensityDto?.labelId == 2) {
+      await this.emailService.sendEmail('Spoiled Meat Detected');
+    }
+    if (createIntensityDto?.labelId == 3) {
+      await this.emailService.sendEmail('Meat with Drug Detected');
+    }
     return this.prisma.intensity.create({
       data: {
         ...createIntensityDto,

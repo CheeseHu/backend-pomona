@@ -14,11 +14,15 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { CreateImageDto } from './dto/create-report.dto';
 import { ReportService } from './report.service';
+import { EmailService } from 'src/email/email.service';
 
 @Controller('report')
 @ApiTags('report')
 export class ReportController {
-  constructor(private readonly reportService: ReportService) {}
+  constructor(
+    private readonly reportService: ReportService,
+    private readonly emailService: EmailService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all reports' })
@@ -65,15 +69,16 @@ export class ReportController {
     if (files.file1 && files.file1[0]) {
       await this.reportService.saveImageData(
         files.file1[0].originalname,
-        files.file1[0].path,
+        files.file1[0].path.replace(/\\/g, '/'),
       );
     }
     if (files.file2 && files.file2[0]) {
       await this.reportService.saveImageData(
         files.file2[0].originalname,
-        files.file2[0].path,
+        files.file2[0].path.replace(/\\/g, '/'),
       );
     }
+    await this.emailService.sendEmail('New Report Uploaded!');
     return { message: 'Files uploaded successfully', files };
   }
 }
