@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Pomona Server Repository.
 
 ## Installation
 
@@ -43,6 +43,9 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+# generate prisma and seed dataset
+$ npx prisma migrate deploy && npx prisma db seed
 ```
 
 ## Test
@@ -64,9 +67,8 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Huynh Hieu](https://www.linkedin.com/in/huynh-hieu-3a32b5285/)
+- Adopt from - [Kamil Myśliwiec](https://kamilmysliwiec.com)
 
 ## License
 
