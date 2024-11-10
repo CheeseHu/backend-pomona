@@ -3,7 +3,9 @@ import { Intensity } from '@prisma/client';
 
 export class IntensityEntity implements Intensity {
   id: number;
+  fileName: string;
   labelId: number;
+  typeId: number;
   systemTemp: number;
   detectorTemp: number;
   humidity: number;

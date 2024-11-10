@@ -66,18 +66,15 @@ export class ReportController {
   ) {
     console.log(files);
 
-    if (files.file1 && files.file1[0]) {
+    if (files.file1 && files.file1[0] && files.file2 && files.file2[0]) {
       await this.reportService.saveImageData(
         files.file1[0].originalname,
         files.file1[0].path.replace(/\\/g, '/'),
-      );
-    }
-    if (files.file2 && files.file2[0]) {
-      await this.reportService.saveImageData(
         files.file2[0].originalname,
         files.file2[0].path.replace(/\\/g, '/'),
       );
     }
+
     await this.emailService.sendEmail('New Report Uploaded!');
     return { message: 'Files uploaded successfully', files };
   }

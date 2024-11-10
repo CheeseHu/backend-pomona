@@ -1,7 +1,8 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 const { handleNullValues } = require('../util/filterNoise.js');
-const intensity_samples = require('./sample.json');
+const intensity_samples = require('./dataset.json');
 const lables = require('./label.json');
+const meatTypes = require('./type.json');
 
 // init Prisma Client
 const prisma = new PrismaClient();
@@ -18,21 +19,25 @@ const getAllIntensities = (): Prisma.IntensityCreateManyInput[] => {
       const sample = [];
       Object.keys(e).forEach((key) => {
         if (key.startsWith('wavelength')) {
-          wavelengths.push(e[key]);
+          wavelengths.push(e[key] ?? 0);
         } else if (key.startsWith('absorbance')) {
-          absorbance.push(e[key]);
+          absorbance.push(e[key] ?? 0);
         } else if (key.startsWith('reference')) {
-          reference.push(e[key]);
+          reference.push(e[key] ?? 0);
         } else if (key.startsWith('sample')) {
-          sample.push(e[key]);
+          sample.push(e[key] ?? 0);
         }
       });
+      const labelId = e?.file_name.match(/(\d+)_Hadamard/)
+        ? Number(e?.file_name.match(/(\d+)_Hadamard/)[1].slice(-1))
+        : Number(e?.file_name.match(/(\d+)Hadamard/)[1].slice(-1));
+      const typeId = e?.file_name.match(/(\d+)_Hadamard/)
+        ? Number(e?.file_name.match(/(\d+)_Hadamard/)[1].slice(0, 2))
+        : Number(e?.file_name.match(/(\d+)Hadamard/)[1].slice(0, 2));
       return {
-        labelId: e?.file_name?.includes('raw')
-          ? 1
-          : e?.file_name?.includes('drugged')
-          ? 3
-          : 2,
+        fileName: e?.file_name,
+        labelId,
+        typeId,
         systemTemp: parseFloat(e?.system_temp),
         detectorTemp: parseFloat(e?.detector_temp),
         humidity: parseFloat(e?.humidity),
@@ -41,10 +46,10 @@ const getAllIntensities = (): Prisma.IntensityCreateManyInput[] => {
         endWavelength: parseInt(wavelengths[wavelengths.length - 1]),
         startAbsorbance: parseInt(absorbance[0]),
         endAbsorbance: parseInt(absorbance[absorbance.length - 1]),
-        wavelength: handleNullValues(wavelengths),
-        absorbance: handleNullValues(absorbance),
-        referenceSignal: handleNullValues(reference),
-        sampleSignal: handleNullValues(sample),
+        wavelength: wavelengths,
+        absorbance: absorbance,
+        referenceSignal: reference,
+        sampleSignal: sample,
       };
     },
   );
@@ -56,6 +61,11 @@ async function main() {
   // seed data of label
   await prisma.label.createMany({
     data: lables.map((e) => ({ name: e.name })),
+    // skipDuplicates: true,
+  });
+  // seed data of label
+  await prisma.type.createMany({
+    data: meatTypes.map((e) => ({ name: e.name })),
     // skipDuplicates: true,
   });
   // seed dataset of intensity

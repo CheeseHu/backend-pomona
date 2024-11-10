@@ -16,12 +16,20 @@ export class IntensitiesService {
     if (createIntensityDto?.labelId == 2) {
       await this.emailService.sendEmail('Spoiled Meat Detected');
     }
-    if (createIntensityDto?.labelId == 3) {
+    if (createIntensityDto?.labelId == 3 || createIntensityDto?.labelId == 4) {
       await this.emailService.sendEmail('Meat with Drug Detected');
     }
+    const now = new Date();
+    const currentMonth = String(now.getMonth()).padStart(2, '0');
+    const currentDay = String(now.getDate()).padStart(2, '0');
+    const currentHour = String(now.getHours()).padStart(2, '0');
+    const currentMinute = String(now.getMinutes()).padStart(2, '0');
     return this.prisma.intensity.create({
       data: {
         ...createIntensityDto,
+        fileName:
+          createIntensityDto?.fileName ??
+          `2411022100_24${currentMonth}${currentDay}${currentHour}${currentMinute}_0${createIntensityDto.typeId}010${createIntensityDto.labelId}`,
         startAbsorbance: createIntensityDto?.absorbance?.[0],
         startWavelength: createIntensityDto?.wavelength?.[0],
         endAbsorbance:

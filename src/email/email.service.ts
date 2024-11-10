@@ -104,7 +104,7 @@ export class EmailService {
     // });
 
     const mailOptions = {
-      from: 'thebetatester3@gmail.com',
+      from: 'POMOMA.admin@vgu.edu.vn',
       to: email.to,
       subject: email.subject,
       html: email.html,

@@ -7,7 +7,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class PklModelController {
   constructor(private readonly pklModelService: PklModelService) {}
 
-  @Post('update')
+  @Post('train')
   async storeFileFromServer(): Promise<void> {
     await this.pklModelService.storePklFileFromServer();
   }

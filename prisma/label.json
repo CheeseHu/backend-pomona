@@ -1,5 +1,7 @@
 [
-    {"name":"Raw Meat"},
-    {"name":"Spoiled meat"},
-    {"name":"Spoiled meat with Drug"}
+  { "name": "Fresh Meat" },
+  { "name": "Spoiled meat" },
+  { "name": "Spoiled meat with kno3" },
+  { "name": "Spoiled meat with kno3 and na2so4" },
+  { "name": "Semi-fresh meat" }
 ]

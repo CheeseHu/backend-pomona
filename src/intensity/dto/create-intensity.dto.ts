@@ -1,8 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateIntensityDto {
+  @ApiProperty({ required: false })
+  fileName: string;
+
   @ApiProperty({ required: true })
   labelId: number;
+
+  @ApiProperty({ required: true })
+  typeId: number;
 
   @ApiProperty({ required: false })
   systemTemp: number;

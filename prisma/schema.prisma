@@ -8,13 +8,16 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Intensity {
   id                        Int       @id @default(autoincrement())
+  fileName                  String
   labelId                   Int      
   label                     Label @relation(fields: [labelId], references: [id])
+  typeId                    Int      
+  type                      Type @relation(fields: [typeId], references: [id])
   systemTemp                Float?
   detectorTemp              Float?
   humidity                  Float?
@@ -39,10 +42,20 @@ model Label {
   updatedAt   DateTime @updatedAt
 }
 
+model Type {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  Intensity   Intensity[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model PklModel {
   id          Int      @id @default(autoincrement())
-  filename    String
-  file        Bytes
+  filename_svm    String
+  file_svm        Bytes
+  filename_xgb    String
+  file_xgb        Bytes
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -50,6 +63,8 @@ model PklModel {
 model Report { 
   id Int @id @default(autoincrement()) 
   filename String 
+  filename_ String 
   filePath String 
+  filePath_ String 
   createdAt DateTime @default(now()) 
 }

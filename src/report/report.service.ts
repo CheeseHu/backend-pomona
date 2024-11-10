@@ -5,11 +5,18 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ReportService {
   constructor(private prisma: PrismaService) {}
 
-  async saveImageData(filename: string, filePath: string) {
+  async saveImageData(
+    filename: string,
+    filePath: string,
+    filename_: string,
+    filePath_: string,
+  ) {
     return this.prisma.report.create({
       data: {
         filename,
         filePath,
+        filename_,
+        filePath_,
       },
     });
   }
