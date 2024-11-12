@@ -1,6 +1,7 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { PklModelService } from './model.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PredictDto } from './dto/predict.dto';
 
 @Controller('PklModel')
 @ApiTags('PklModel')
@@ -10,6 +11,11 @@ export class PklModelController {
   @Post('train')
   async storeFileFromServer(): Promise<void> {
     await this.pklModelService.storePklFileFromServer();
+  }
+
+  @Post('predict')
+  async predict(@Body() dto: PredictDto): Promise<any> {
+    return await this.pklModelService.predict(dto);
   }
 
   @Get('count')

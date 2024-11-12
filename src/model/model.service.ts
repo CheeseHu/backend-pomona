@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { json2csv } from 'json-2-csv';
 import * as path from 'path';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PredictDto } from './dto/predict.dto';
 
 @Injectable()
 export class PklModelService {
@@ -66,6 +67,7 @@ export class PklModelService {
     }
     return allData;
   }
+
   async storePklFileFromServer(): Promise<any> {
     const dataset = await this.fetchAllData();
     // Flatten the data array
@@ -149,5 +151,41 @@ export class PklModelService {
   async countModel(): Promise<{ count: number }> {
     const count = await this.prisma.pklModel.count();
     return { count };
+  }
+
+  async predict(dto: PredictDto): Promise<any> {
+    // Path to the temporary folder
+    const tmpFolderPath = path.join(process.cwd(), 'src/model/tmp');
+    // Path to the Python script inside the temporary folder
+    const pythonScriptPath = path.join(tmpFolderPath, 'predict.py');
+    // Command to run the Python script
+    const jsonArrayString = JSON.stringify({ signal: dto.signal }).replace(
+      /"/g,
+      '\\"',
+    );
+
+    const command = `python ${pythonScriptPath} ${dto.type} "${jsonArrayString}"`;
+    // Function to execute the command
+    function execCommand(command) {
+      return new Promise((resolve, reject) => {
+        exec(command, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Error executing: ${error.message}`);
+            reject(error);
+            return;
+          }
+          if (stderr) {
+            console.error(`Script error output: ${stderr}`);
+            reject(new Error(stderr));
+            return;
+          }
+          console.log(`Model output: ${stdout}`);
+          resolve(stdout);
+        });
+      });
+    }
+    // Execute the command and wait for it to complete
+    const result = await execCommand(command);
+    return { predict: Number(result[1]) };
   }
 }
